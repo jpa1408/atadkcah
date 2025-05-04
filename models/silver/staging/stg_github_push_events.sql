@@ -67,12 +67,12 @@ SELECT
   ARRAY_SIZE(sd.push_commits_array) AS number_of_commits,
   ARRAY_AGG(
     OBJECT_CONSTRUCT(
-      'sha', TRY_CAST(f.commit:sha::STRING AS VARCHAR),
-      'message', TRY_CAST(f.commit:message::STRING AS VARCHAR),
-      'author_name', TRY_CAST(f.commit:author:name::STRING AS VARCHAR),
-      'author_email', TRY_CAST(f.commit:author:email::STRING AS VARCHAR),
-      'distinct', TRY_CAST(f.commit:distinct::BOOLEAN AS BOOLEAN),
-      'url', TRY_CAST(f.commit:url::STRING AS VARCHAR)
+      'sha', TRY_CAST(f.value:sha::STRING AS VARCHAR),
+      'message', TRY_CAST(f.value:message::STRING AS VARCHAR),
+      'author_name', TRY_CAST(f.value:author:name::STRING AS VARCHAR),
+      'author_email', TRY_CAST(f.value:author:email::STRING AS VARCHAR),
+      'distinct', TRY_CAST(f.value:distinct::BOOLEAN AS BOOLEAN),
+      'url', TRY_CAST(f.value:url::STRING AS VARCHAR)
     )
   ) WITHIN GROUP (ORDER BY f.index) AS parsed_commits
 FROM source_data sd,
