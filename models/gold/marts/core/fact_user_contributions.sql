@@ -4,7 +4,7 @@
     materialized='incremental',
     tags=['gold', 'core', 'users'],
     unique_key='user_id',
-    incremental_strategy='merge'
+    incremental_strategy='delete+insert'
   )
 }}
 

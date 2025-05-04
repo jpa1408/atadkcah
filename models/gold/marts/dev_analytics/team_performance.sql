@@ -8,12 +8,12 @@
 
 WITH team_activity AS (
   SELECT
-    repo_owner AS team_name,
-    DATE_TRUNC('WEEK', event_created_at) AS activity_week,
-    COUNT(DISTINCT event_id) AS total_events,
-    COUNT(DISTINCT repo_name) AS active_repos,
-    COUNT(DISTINCT user_login) AS active_members,
-    SUM(total_commits) AS total_commits
+    r.repo_owner AS team_name,
+    DATE_TRUNC('WEEK', f.activity_date) AS activity_week,
+    COUNT(DISTINCT f.total_events) AS total_events,
+    COUNT(DISTINCT f.repo_name) AS active_repos,
+    COUNT(DISTINCT f.active_users) AS active_members,
+    SUM(f.push_events) AS total_commits
   FROM {{ ref('fact_daily_activity') }} f
   JOIN {{ ref('dim_repositories') }} r ON f.repo_name = r.repo_name
   GROUP BY 1, 2
@@ -21,22 +21,24 @@ WITH team_activity AS (
 
 fork_metrics AS (
   SELECT
-    SPLIT_PART(original_repo, '/', 1) AS team_name,
+    SPLIT_PART(fork_original_repo, '/', 1) AS team_name,
     COUNT(*) AS forks_received
   FROM {{ ref('stg_github_fork_events') }}
+  WHERE fork_original_repo IS NOT NULL
   GROUP BY 1
 ),
 
 response_metrics AS (
   SELECT
-    repo_owner AS team_name,
+    push_repo_owner AS team_name,
     AVG(DATEDIFF('HOUR', commit_time, next_commit_time)) AS avg_hours_between_commits
   FROM (
     SELECT
-      repo_owner,
-      event_created_at AS commit_time,
-      LEAD(event_created_at) OVER (PARTITION BY repo_owner ORDER BY event_created_at) AS next_commit_time
+      push_repo_owner,
+      push_event_created_at AS commit_time,
+      LEAD(push_event_created_at) OVER (PARTITION BY push_repo_owner ORDER BY push_event_created_at) AS next_commit_time
     FROM {{ ref('stg_github_push_events') }}
+    WHERE push_repo_owner IS NOT NULL AND push_event_created_at IS NOT NULL
   )
   GROUP BY 1
 )
