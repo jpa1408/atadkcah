@@ -35,7 +35,7 @@ WITH source_data AS (
     TRY_CAST(event_data:"payload":"before"::STRING AS VARCHAR) AS push_before_commit_sha,
     TRY_CAST(event_data:"payload":"size"::INT AS INT) AS push_total_commits,
     TRY_CAST(event_data:"payload":"distinct_size"::INT AS INT) AS push_distinct_commits,
-    TRY_CAST(event_data:"payload":"commits" AS ARRAY) AS push_commits_array
+    event_data:"payload":"commits" AS push_commits_array
 
   FROM DATAHACK.public.raw_github_events
   WHERE
@@ -57,7 +57,7 @@ SELECT
     )
   ) WITHIN GROUP (ORDER BY INDEX) AS parsed_commits
 FROM source_data,
-LATERAL FLATTEN(input => commits_array) AS f(commit, index)
+LATERAL FLATTEN(input => push_commits_array) AS f(commit, index)
 GROUP BY
   event_id, event_type, push_is_public_event, push_event_created_at,
   push_user_id, push_user_login, push_user_display_login, push_user_avatar_url,
