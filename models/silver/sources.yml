@@ -1,0 +1,16 @@
+# models/silver/sources.yml
+version: 2
+
+sources:
+  - name: github_bronze
+    description: "Raw data from GitHub Archives"
+    database: "{{ env_var('DBT_DATABASE', 'your_database') }}"
+    schema: "{{ env_var('DBT_SCHEMA', 'raw_github') }}"
+    tables:
+      - name: raw_github_events
+        description: "Raw GitHub Archives events data from S3"
+        columns:
+          - name: event_data
+            description: "JSON containing the full event data"
+          - name: event_time
+            description: "Timestamp when the event was recorded"

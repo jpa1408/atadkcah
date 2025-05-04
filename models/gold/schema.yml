@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: fact_daily_activity
+    description: "Daily metrics for repository activity"
+    columns:
+      - name: activity_date
+        description: "Date of the activity"
+        tests:
+          - not_null
+      - name: push_events
+        description: "Number of push events to branches"
+        tests:
+          - not_null
+          - relationships:
+              to: source('github_bronze', 'raw_github_events')
+              field: event_id
+
+  - name: team_performance
+    description: "Team performance metrics based on GitHub activity"
+    columns:
+      - name: team_name
+        description: "Team name (repository owner)"
+        tests:
+          - not_null
+      - name: total_commits
+        description: "Total number of commits by the team"
+        tests:
+          - not_null
+      - name: active_repositories
+        description: "Number of active repositories"
+        tests:
+          - not_null
+
+  - name: data_quality_metrics
+    description: "Daily data quality metrics for GitHub events"
+    columns:
+      - name: metric_date
+        description: "Date of the metrics"
+        tests:
+          - not_null
+      - name: total_events
+        description: "Total number of events processed"
+        tests:
+          - not_null
+      - name: unique_users
+        description: "Number of unique users"
+        tests:
+          - not_null
+      - name: unique_repositories
+        description: "Number of unique repositories"
+        tests:
+          - not_null
+      - name: avg_commits_per_push
+        description: "Average number of commits per push"
+        tests:
+          - not_null
+      - name: error_rate
+        description: "Percentage of events with data quality issues"
+        tests:
+          - not_null
+      - name: quality_rating
+        description: "Overall data quality rating"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Excellent', 'Good', 'Fair', 'Poor']

@@ -1,0 +1,24 @@
+# models/silver/staging/schema.yml
+version: 2
+
+models:
+  - name: stg_github_push_events
+    description: "Eventos de Push de GitHub limpios y estructurados"
+    columns:
+      - name: event_id
+        description: "ID único del evento"
+        tests:
+          - unique
+          - not_null
+      - name: branch_name
+        description: "Rama donde se realizó el push"
+        tests:
+          - accepted_values:
+              values: ['main', 'master', 'dev']
+
+  - name: stg_github_push_commits
+    description: "Commits asociados a eventos de Push"
+    columns:
+      - name: commit_sha
+        tests:
+          - not_null
