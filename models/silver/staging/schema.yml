@@ -10,11 +10,80 @@ models:
         tests:
           - unique
           - not_null
+      - name: event_type
+        description: "Tipo de evento (siempre 'PushEvent')"
+        tests:
+          - accepted_values:
+              values: ['PushEvent']
+      - name: is_public_event
+        description: "Indica si el evento es público"
+        tests:
+          - not_null
+      - name: event_created_at
+        description: "Fecha y hora de creación del evento"
+        tests:
+          - not_null
+      - name: user_id
+        description: "ID del usuario que realizó el push"
+        tests:
+          - not_null
+      - name: user_login
+        description: "Login del usuario"
+        tests:
+          - not_null
+      - name: user_display_login
+        description: "Nombre de visualización del usuario"
+      - name: user_avatar_url
+        description: "URL del avatar del usuario"
+      - name: repo_id
+        description: "ID del repositorio"
+        tests:
+          - not_null
+      - name: repo_owner
+        description: "Propietario del repositorio"
+        tests:
+          - not_null
+      - name: repo_name
+        description: "Nombre del repositorio"
+        tests:
+          - not_null
+      - name: push_id
+        description: "ID único del push"
+        tests:
+          - not_null
+      - name: repository_id
+        description: "ID del repositorio (duplicado del payload)"
+        tests:
+          - not_null
+      - name: git_reference
+        description: "Referencia Git completa"
+        tests:
+          - not_null
       - name: branch_name
-        description: "Rama donde se realizó el push"
+        description: "Nombre de la rama"
         tests:
           - accepted_values:
               values: ['main', 'master', 'dev']
+      - name: head_commit_sha
+        description: "SHA del commit más reciente"
+        tests:
+          - not_null
+      - name: before_commit_sha
+        description: "SHA del commit anterior"
+      - name: total_commits
+        description: "Número total de commits en el push"
+        tests:
+          - not_null
+      - name: distinct_commits
+        description: "Número de commits únicos en el push"
+        tests:
+          - not_null
+      - name: number_of_commits
+        description: "Número de commits en el array"
+        tests:
+          - not_null
+      - name: parsed_commits
+        description: "Array de commits parseados con sus detalles"
 
   - name: stg_github_push_commits
     description: "Commits asociados a eventos de Push"

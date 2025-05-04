@@ -10,11 +10,15 @@ SELECT
   e.event_id,
   e.event_created_at,
   e.user_login,
+  e.repo_owner,
   e.repo_name,
-  c.value:sha::STRING AS commit_sha,
-  c.value:author:name::STRING AS author_name,
-  c.value:author:email::STRING AS author_email,
-  c.value:message::STRING AS commit_message,
-  c.value:url::STRING AS commit_url
+  TRY_CAST(c.value:sha::STRING AS VARCHAR) AS commit_sha,
+  TRY_CAST(c.value:author:name::STRING AS VARCHAR) AS author_name,
+  TRY_CAST(c.value:author:email::STRING AS VARCHAR) AS author_email,
+  TRY_CAST(c.value:message::STRING AS VARCHAR) AS commit_message,
+  TRY_CAST(c.value:url::STRING AS VARCHAR) AS commit_url,
+  TRY_CAST(c.value:distinct::BOOLEAN AS BOOLEAN) AS is_distinct_commit,
+  e.branch_name,
+  e.push_id
 FROM {{ ref('stg_github_push_events') }} e,
 LATERAL FLATTEN(input => e.commits_array) c

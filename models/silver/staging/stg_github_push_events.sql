@@ -17,6 +17,7 @@ WITH source_data AS (
     -- Información del usuario
     TRY_CAST(event_data:actor:id::INT AS INT) AS user_id,
     TRY_CAST(event_data:actor:login::STRING AS VARCHAR) AS user_login,
+    TRY_CAST(event_data:actor:display_login::STRING AS VARCHAR) AS user_display_login,
     TRY_CAST(event_data:actor:avatar_url::STRING AS VARCHAR) AS user_avatar_url,
 
     -- Detalles del repositorio
@@ -26,9 +27,13 @@ WITH source_data AS (
 
     -- Payload específico
     TRY_CAST(event_data:payload:push_id::INT AS INT) AS push_id,
+    TRY_CAST(event_data:payload:repository_id::INT AS INT) AS repository_id,
     TRY_CAST(event_data:payload:ref::STRING AS VARCHAR) AS git_reference,
     TRY_CAST(REGEXP_REPLACE(event_data:payload:ref::STRING, 'refs/heads/', '') AS VARCHAR) AS branch_name,
     TRY_CAST(event_data:payload:head::STRING AS VARCHAR) AS head_commit_sha,
+    TRY_CAST(event_data:payload:before::STRING AS VARCHAR) AS before_commit_sha,
+    TRY_CAST(event_data:payload:size::INT AS INT) AS total_commits,
+    TRY_CAST(event_data:payload:distinct_size::INT AS INT) AS distinct_commits,
     TRY_CAST(event_data:payload:commits AS ARRAY) AS commits_array
 
   FROM {{ source('github_bronze', 'raw_github_events') }}
@@ -45,14 +50,17 @@ SELECT
       'sha', TRY_CAST(commit:sha::STRING AS VARCHAR),
       'message', TRY_CAST(commit:message::STRING AS VARCHAR),
       'author_name', TRY_CAST(commit:author:name::STRING AS VARCHAR),
-      'author_email', TRY_CAST(commit:author:email::STRING AS VARCHAR)
+      'author_email', TRY_CAST(commit:author:email::STRING AS VARCHAR),
+      'distinct', TRY_CAST(commit:distinct::BOOLEAN AS BOOLEAN),
+      'url', TRY_CAST(commit:url::STRING AS VARCHAR)
     )
   ) WITHIN GROUP (ORDER BY INDEX) AS parsed_commits
 FROM source_data,
 LATERAL FLATTEN(input => commits_array) AS f(commit, index)
 GROUP BY
   event_id, event_type, is_public_event, event_created_at,
-  user_id, user_login, user_avatar_url,
+  user_id, user_login, user_display_login, user_avatar_url,
   repo_id, repo_owner, repo_name,
-  push_id, git_reference, branch_name, head_commit_sha,
+  push_id, repository_id, git_reference, branch_name, 
+  head_commit_sha, before_commit_sha, total_commits, distinct_commits,
   commits_array
