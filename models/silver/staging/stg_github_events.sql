@@ -7,14 +7,14 @@
 
 WITH bronze_events AS (
     SELECT
-        event_id,
-        type as event_type,
-        actor:"id"::string as actor_id,
-        actor:"login"::string as actor_login,
-        repo:"id"::string as repo_id,
-        repo:"name"::string as repo_name,
-        created_at as event_created_at,
-        payload
+        event_data["id"]::string as event_id,
+        event_data["type"]::string as event_type,
+        event_data["repo"]["id"]::string as repo_id,
+        event_data["repo"]["name"]::string as repo_name,
+        event_data["actor"]["id"]::string as actor_id,
+        event_data["actor"]["login"]::string as actor_login,
+        event_data["created_at"]::string as event_created_at,
+        event_data["payload"] as payload
     FROM DATAHACK.public.raw_github_events
 )
 
