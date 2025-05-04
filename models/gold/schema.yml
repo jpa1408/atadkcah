@@ -3,6 +3,10 @@ version: 2
 models:
   - name: fact_daily_activity
     description: "Daily metrics for repository activity"
+    tests:
+      - unique:
+          column_name: "activity_date || '-' || repo_name"
+          description: "La combinación de fecha y repositorio debe ser única"
     columns:
       - name: activity_date
         description: "Date of the activity"
@@ -16,6 +20,7 @@ models:
         description: "Total number of events"
         tests:
           - not_null
+          - positive_value
       - name: push_events
         description: "Number of push events"
         tests:
@@ -28,6 +33,7 @@ models:
         description: "Number of active users"
         tests:
           - not_null
+          - positive_value
 
   - name: team_performance
     description: "Team performance metrics based on GitHub activity"
@@ -40,16 +46,63 @@ models:
         description: "Total number of commits by the team"
         tests:
           - not_null
+          - positive_value
       - name: active_repositories
         description: "Number of active repositories"
         tests:
           - not_null
+          - positive_value
 
   - name: data_quality_metrics
     description: "Daily data quality metrics for GitHub events"
     columns:
       - name: metric_date
-        description: "Date of the metrics"
+        description: "Date for the quality metrics"
+        tests:
+          - not_null
+          - unique
+      - name: total_events
+        description: "Total number of events processed"
+        tests:
+          - not_null
+          - positive_value
+      - name: error_rate
+        description: "Percentage of events with errors or missing data"
+        tests:
+          - not_null
+          
+  - name: fact_user_contributions
+    description: "User contribution metrics based on GitHub activity"
+    columns:
+      - name: user_id
+        description: "User ID from GitHub"
+        tests:
+          - not_null
+          - unique
+      - name: user_login
+        description: "GitHub username"
+        tests:
+          - not_null
+      - name: total_contributions
+        description: "Total number of contributions"
+        tests:
+          - not_null
+          - positive_value
+          
+  - name: dim_repositories
+    description: "Repository dimension table"
+    columns:
+      - name: repo_id
+        description: "Repository ID from GitHub"
+        tests:
+          - not_null
+          - unique
+      - name: repo_name
+        description: "Repository name"
+        tests:
+          - not_null
+      - name: repo_owner
+        description: "Repository owner"
         tests:
           - not_null
       - name: total_events

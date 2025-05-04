@@ -9,23 +9,23 @@
 
 WITH base_repos AS (
   SELECT DISTINCT
-    repo_id,
-    repo_name,
-    repo_owner
+    push_repo_id as repo_id,
+    push_repo_name as repo_name,
+    push_repo_owner as repo_owner
   FROM {{ ref('stg_github_push_events') }}
-  WHERE repo_id IS NOT NULL
-    AND repo_name IS NOT NULL
-    AND repo_owner IS NOT NULL
+  WHERE push_repo_id IS NOT NULL
+    AND push_repo_name IS NOT NULL
+    AND push_repo_owner IS NOT NULL
 ),
 
 repo_activity AS (
   SELECT
-    repo_id,
-    MIN(event_created_at) AS first_activity_date,
-    MAX(event_created_at) AS last_activity_date,
+    push_repo_id as repo_id,
+    MIN(push_event_created_at) AS first_activity_date,
+    MAX(push_event_created_at) AS last_activity_date,
     COUNT(DISTINCT event_id) AS total_events
   FROM {{ ref('stg_github_push_events') }}
-  WHERE repo_id IS NOT NULL
+  WHERE push_repo_id IS NOT NULL
   GROUP BY 1
 ),
 

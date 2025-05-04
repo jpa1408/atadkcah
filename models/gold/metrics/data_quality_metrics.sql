@@ -9,11 +9,11 @@ WITH push_events_stats AS (
     SELECT
         DATE_TRUNC('day', push_event_created_at) AS metric_date,
         COUNT(*) AS total_events,
-        COUNT(DISTINCT user_id) AS unique_users,
-        COUNT(DISTINCT repo_id) AS unique_repositories,
+        COUNT(DISTINCT push_user_id) AS unique_users,
+        COUNT(DISTINCT push_repo_id) AS unique_repositories,
         AVG(number_of_commits) AS avg_commits_per_push,
         COUNT(CASE WHEN parsed_commits IS NULL THEN 1 END) AS events_without_commits,
-        COUNT(CASE WHEN repo_owner IS NULL OR repo_name IS NULL THEN 1 END) AS events_without_repo_info
+        COUNT(CASE WHEN push_repo_owner IS NULL OR push_repo_name IS NULL THEN 1 END) AS events_without_repo_info
     FROM {{ ref('stg_github_push_events') }}
     GROUP BY 1
 ),

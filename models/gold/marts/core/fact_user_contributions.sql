@@ -10,19 +10,19 @@
 
 WITH source_data AS (
   SELECT
-    user_id,
-    user_login,
+    push_user_id as user_id,
+    push_user_login as user_login,
     event_id,
-    repo_id,
-    event_created_at
+    push_repo_id as repo_id,
+    push_event_created_at as event_created_at
   FROM {{ ref('stg_github_push_events') }}
-  WHERE user_id IS NOT NULL
-    AND user_login IS NOT NULL
+  WHERE push_user_id IS NOT NULL
+    AND push_user_login IS NOT NULL
     AND event_id IS NOT NULL
-    AND repo_id IS NOT NULL
-    AND event_created_at IS NOT NULL
+    AND push_repo_id IS NOT NULL
+    AND push_event_created_at IS NOT NULL
   {% if is_incremental() %}
-    AND event_created_at >= (
+    AND push_event_created_at >= (
       SELECT DATEADD(day, -1, MAX(last_contribution_date))
       FROM {{ this }}
     )
