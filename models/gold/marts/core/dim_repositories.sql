@@ -7,15 +7,35 @@
   )
 }}
 
-WITH repo_activity AS (
-  SELECT
+WITH base_repos AS (
+  SELECT DISTINCT
     repo_id,
     repo_name,
+    repo_owner
+  FROM {{ ref('stg_github_push_events') }}
+  WHERE repo_id IS NOT NULL
+    AND repo_name IS NOT NULL
+    AND repo_owner IS NOT NULL
+),
+
+repo_activity AS (
+  SELECT
+    repo_id,
     MIN(event_created_at) AS first_activity_date,
     MAX(event_created_at) AS last_activity_date,
     COUNT(DISTINCT event_id) AS total_events
   FROM {{ ref('stg_github_push_events') }}
-  GROUP BY 1, 2
+  WHERE repo_id IS NOT NULL
+  GROUP BY 1
+),
+
+fork_counts AS (
+  SELECT 
+    original_repo, 
+    COUNT(*) AS fork_count
+  FROM {{ ref('stg_github_fork_events') }}
+  WHERE original_repo IS NOT NULL
+  GROUP BY 1
 )
 
 SELECT
@@ -25,11 +45,10 @@ SELECT
   a.first_activity_date,
   a.last_activity_date,
   a.total_events,
-  COALESCE(f.fork_count, 0) AS fork_count
-FROM {{ ref('stg_github_push_events') }} r
-LEFT JOIN (
-  SELECT original_repo, COUNT(*) AS fork_count
-  FROM {{ ref('stg_github_fork_events') }}
-  GROUP BY 1
-) f ON r.repo_name = f.original_repo
-LEFT JOIN repo_activity a ON r.repo_id = a.repo_id
+  COALESCE(f.fork_count, 0) AS fork_count,
+  CURRENT_TIMESTAMP() AS dbt_updated_at
+FROM base_repos r
+LEFT JOIN repo_activity a 
+  ON r.repo_id = a.repo_id
+LEFT JOIN fork_counts f 
+  ON r.repo_name = f.original_repo
