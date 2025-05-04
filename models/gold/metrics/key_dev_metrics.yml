@@ -8,8 +8,5 @@ metrics:
     type: count_distinct
     meta:
       model: "fact_daily_activity"
-    calculation_method: count_distinct
-    expression: repo_name
-    time_grains: [day]
-    dimensions:
-      - activity_date
+      column: "repo_name"
+      time_column: "activity_date"
