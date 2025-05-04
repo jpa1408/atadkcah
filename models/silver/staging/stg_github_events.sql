@@ -33,7 +33,8 @@ SELECT
     CASE WHEN event_type = 'PushEvent' THEN payload:"distinct_size"::integer END as push_distinct_size,
     CASE WHEN event_type = 'PushEvent' THEN payload:"head"::string END as push_head,
     CASE WHEN event_type = 'PushEvent' THEN payload:"before"::string END as push_before,
-    CASE WHEN event_type = 'PushEvent' THEN payload:"commits"::integer END as push_commits,
+    CASE WHEN event_type = 'PushEvent' THEN payload:"commits" END as push_commits_array, -- Mantiene el tipo VARIANT
+    CASE WHEN event_type = 'PushEvent' THEN ARRAY_SIZE(payload:"commits") END as push_commits_count, -- Número de commits
     CASE WHEN event_type = 'PushEvent' THEN payload:"commits_sha"::string END as push_commits_sha,
     CASE WHEN event_type = 'PushEvent' THEN payload:"commits_author_email"::string END as push_commits_author_email,
     CASE WHEN event_type = 'PushEvent' THEN payload:"commits_author_name"::string END as push_commits_author_name,
