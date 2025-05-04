@@ -1,11 +1,10 @@
-# models/gold/metrics/key_dev_metrics.yml
 version: 2
 
 metrics:
   - name: daily_active_repos
     label: Daily Active Repositories
     description: "Número de repositorios con al menos un evento en el día"
-    model: "{{ ref('fact_daily_activity') }}"
+    model: fact_daily_activity
     type: simple
     type_params:
       measure:
