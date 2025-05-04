@@ -45,7 +45,7 @@ WITH source_data AS (
 
 SELECT
   *,
-  ARRAY_SIZE(commits_array) AS number_of_commits,
+  ARRAY_SIZE(push_commits_array) AS number_of_commits,
   ARRAY_AGG(
     OBJECT_CONSTRUCT(
       'sha', TRY_CAST(commit:sha::STRING AS VARCHAR),
