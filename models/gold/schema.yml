@@ -8,13 +8,26 @@ models:
         description: "Date of the activity"
         tests:
           - not_null
-      - name: push_events
-        description: "Number of push events to branches"
+      - name: repo_name
+        description: "Repository name"
         tests:
           - not_null
-          - relationships:
-              to: source('github_bronze', 'raw_github_events')
-              field: event_id
+      - name: total_events
+        description: "Total number of events"
+        tests:
+          - not_null
+      - name: push_events
+        description: "Number of push events"
+        tests:
+          - not_null
+      - name: fork_events
+        description: "Number of fork events"
+        tests:
+          - not_null
+      - name: active_users
+        description: "Number of active users"
+        tests:
+          - not_null
 
   - name: team_performance
     description: "Team performance metrics based on GitHub activity"

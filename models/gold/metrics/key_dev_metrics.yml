@@ -13,3 +13,7 @@ metrics:
         agg: count_distinct
     timestamp: activity_date
     time_grains: [day, week, month, quarter, year]
+    meta:
+      owner: "Data Team"
+      tags: ["github", "activity"]
+    tags: ["github", "activity"]

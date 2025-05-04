@@ -4,13 +4,18 @@ version: 2
 sources:
   - name: github_bronze
     description: "Raw data from GitHub Archives"
-    database: "{{ env_var('DBT_DATABASE', 'your_database') }}"
-    schema: "{{ env_var('DBT_SCHEMA', 'raw_github') }}"
+    database: "{{ env_var('DBT_DATABASE', 'github_archive') }}"
+    schema: "{{ env_var('DBT_SCHEMA', 'bronze') }}"
     tables:
       - name: raw_github_events
         description: "Raw GitHub Archives events data from S3"
         columns:
           - name: event_data
             description: "JSON containing the full event data"
+            tests:
+              - not_null
           - name: event_time
             description: "Timestamp when the event was recorded"
+            tests:
+              - not_null
+              - dbt_utils.is_timestamp
