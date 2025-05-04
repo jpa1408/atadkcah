@@ -6,6 +6,7 @@
   )
 }}
 
+WITH 
 -- Paso 1: Crear una dimensión de equipos unificada (para tener un listado completo de equipos/owners)
 team_dimension AS (
   -- Equipos de actividad principal
