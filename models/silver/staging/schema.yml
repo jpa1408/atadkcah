@@ -2,6 +2,79 @@
 version: 2
 
 models:
+  - name: stg_github_events
+    description: "Eventos de GitHub limpios y estructurados"
+    columns:
+      - name: event_id
+        description: "ID único del evento"
+        tests:
+          - unique
+          - not_null
+      - name: event_type
+        description: "Tipo de evento (PushEvent, PullRequestEvent, IssuesEvent, WatchEvent)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['PushEvent', 'PullRequestEvent', 'IssuesEvent', 'WatchEvent']
+      - name: repo_id
+        description: "ID del repositorio"
+        tests:
+          - not_null
+      - name: repo_name
+        description: "Nombre completo del repositorio (owner/repo)"
+        tests:
+          - not_null
+      - name: actor_id
+        description: "ID del actor que realizó el evento"
+        tests:
+          - not_null
+      - name: actor_login
+        description: "Login del actor"
+        tests:
+          - not_null
+      - name: event_created_at
+        description: "Fecha y hora de creación del evento"
+        tests:
+          - not_null
+      - name: payload_ref
+        description: "Referencia del payload (solo para PushEvent)"
+      - name: payload_size
+        description: "Tamaño del payload (solo para PushEvent)"
+      - name: payload_distinct_size
+        description: "Número de commits distintos (solo para PushEvent)"
+      - name: payload_head
+        description: "SHA del commit head (solo para PushEvent)"
+      - name: payload_before
+        description: "SHA del commit anterior (solo para PushEvent)"
+      - name: payload_commits
+        description: "Número de commits en el push (solo para PushEvent)"
+      - name: payload_commits_sha
+        description: "SHA de los commits (solo para PushEvent)"
+      - name: payload_commits_author_email
+        description: "Email del autor de los commits (solo para PushEvent)"
+      - name: payload_commits_author_name
+        description: "Nombre del autor de los commits (solo para PushEvent)"
+      - name: payload_commits_message
+        description: "Mensaje de los commits (solo para PushEvent)"
+      - name: payload_commits_distinct
+        description: "Indica si el commit es distinto (solo para PushEvent)"
+      - name: payload_number
+        description: "Número del pull request/issue (solo para PullRequestEvent/IssuesEvent)"
+      - name: payload_action
+        description: "Acción realizada (opened, closed, etc)"
+      - name: payload_pull_request_title
+        description: "Título del pull request (solo para PullRequestEvent)"
+      - name: payload_pull_request_user_login
+        description: "Login del creador del pull request (solo para PullRequestEvent)"
+      - name: payload_pull_request_merged
+        description: "Indica si el pull request fue merged (solo para PullRequestEvent)"
+      - name: payload_issue_title
+        description: "Título del issue (solo para IssuesEvent)"
+      - name: payload_issue_user_login
+        description: "Login del creador del issue (solo para IssuesEvent)"
+      - name: payload_issue_labels
+        description: "Labels asociados al issue (solo para IssuesEvent)"
+
   - name: stg_github_push_events
     description: "Eventos de Push de GitHub limpios y estructurados"
     columns:
