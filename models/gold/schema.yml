@@ -71,23 +71,7 @@ models:
         tests:
           - not_null
           
-  - name: fact_user_contributions
-    description: "User contribution metrics based on GitHub activity"
-    columns:
-      - name: user_id
-        description: "User ID from GitHub"
-        tests:
-          - not_null
-          - unique
-      - name: user_login
-        description: "GitHub username"
-        tests:
-          - not_null
-      - name: total_contributions
-        description: "Total number of contributions"
-        tests:
-          - not_null
-          - positive_value
+  # La definición de fact_user_contributions se encuentra en models/gold/marts/core/fact_user_contributions.yml
           
   - name: dim_repositories
     description: "Repository dimension table"
