@@ -1,0 +1,36 @@
+# models/gold/marts/core/fact_user_contributions.yml
+version: 2
+
+models:
+  - name: fact_user_contributions
+    description: "Métricas de contribuciones por usuario"
+    columns:
+      - name: user_id
+        description: "ID único del usuario"
+        tests:
+          - not_null
+          - unique
+      - name: user_login
+        description: "Login del usuario en GitHub"
+        tests:
+          - not_null
+      - name: total_contributions
+        description: "Número total de contribuciones (pushes)"
+        tests:
+          - not_null
+      - name: repos_contributed_to
+        description: "Número de repositorios donde ha contribuido"
+        tests:
+          - not_null
+      - name: first_contribution_date
+        description: "Fecha de la primera contribución"
+        tests:
+          - not_null
+      - name: last_contribution_date
+        description: "Fecha de la última contribución"
+        tests:
+          - not_null
+      - name: dbt_updated_at
+        description: "Última actualización del registro"
+        tests:
+          - not_null 

@@ -1,0 +1,40 @@
+# models/gold/metrics/data_quality_metrics.yml
+version: 2
+
+models:
+  - name: data_quality_metrics
+    description: "Métricas de calidad de datos para eventos de GitHub"
+    columns:
+      - name: metric_date
+        description: "Fecha de la métrica"
+        tests:
+          - not_null
+      - name: total_events
+        description: "Número total de eventos"
+        tests:
+          - not_null
+      - name: unique_users
+        description: "Número de usuarios únicos"
+        tests:
+          - not_null
+      - name: unique_repositories
+        description: "Número de repositorios únicos"
+        tests:
+          - not_null
+      - name: avg_commits_per_push
+        description: "Promedio de commits por push"
+      - name: events_without_commits
+        description: "Eventos sin información de commits"
+      - name: events_without_repo_info
+        description: "Eventos sin información de repositorio"
+      - name: error_rate
+        description: "Porcentaje de eventos con errores"
+      - name: quality_rating
+        description: "Calificación de calidad (Excellent, Good, Fair, Poor)"
+        tests:
+          - accepted_values:
+              values: ['Excellent', 'Good', 'Fair', 'Poor']
+      - name: last_updated
+        description: "Última actualización de la métrica"
+        tests:
+          - not_null 
