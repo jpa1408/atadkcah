@@ -5,12 +5,11 @@ metrics:
   - name: daily_active_repos
     label: Daily Active Repositories
     description: "Número de repositorios con al menos un evento en el día"
+    model: "{{ ref('fact_daily_activity') }}"
     type: simple
     type_params:
       measure:
-        name: repo_count
+        name: repo_name
         agg: count_distinct
-        expr: repo_name
-    meta:
-      model: "fact_daily_activity"
-      time_column: "activity_date"
+    timestamp: activity_date
+    time_grains: [day, week, month, quarter, year]
