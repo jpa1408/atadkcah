@@ -9,10 +9,10 @@ metrics:
     type_params:
       measure:
         name: repo_name
-        agg: count_distinct
+        agg: count_distinct # O 'aggregation' dependiendo de la versión
     timestamp: activity_date
     time_grains: [day, week, month, quarter, year]
     meta:
       owner: "Data Team"
-      tags: ["github", "activity"]
-    tags: ["github", "activity"]
+      tags: ["github", "activity"] # <--- Esta es la ubicación correcta para los tags
+    # La línea duplicada de 'tags:' ha sido eliminada
