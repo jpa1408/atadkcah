@@ -21,4 +21,4 @@ SELECT
   e.branch_name,
   e.push_id
 FROM {{ ref('stg_github_push_events') }} e,
-LATERAL FLATTEN(input => e.commits_array) c
+LATERAL FLATTEN(input => e.push_commits_array) c
