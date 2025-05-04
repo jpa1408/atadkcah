@@ -15,7 +15,7 @@ WITH bronze_events AS (
         repo:"name"::string as repo_name,
         created_at as event_created_at,
         payload
-    FROM {{ source('github_bronze', 'raw_github_events') }}
+    FROM DATAHACK.bronze.raw_github_events
 )
 
 SELECT

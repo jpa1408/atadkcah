@@ -12,5 +12,5 @@ SELECT
   event_data["actor"]["login"]::STRING AS user_login,
   event_data["repo"]["name"]::STRING AS original_repo,
   event_data["payload"]["forkee"]["full_name"]::STRING AS forked_repo
-FROM {{ source('github_bronze', 'raw_github_events') }}
+FROM DATAHACK.bronze.raw_github_events
 WHERE event_data["type"] = 'ForkEvent'
