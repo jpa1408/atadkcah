@@ -39,8 +39,8 @@ WITH source_data AS (
 
   FROM DATAHACK.public.raw_github_events
   WHERE
-    event_data["type"] = 'PushEvent'
-    AND event_data["id"] IS NOT NULL
+    event_data:"type"::STRING = 'PushEvent'
+    AND event_data:"id" IS NOT NULL
 )
 
 SELECT
@@ -59,9 +59,9 @@ SELECT
 FROM source_data,
 LATERAL FLATTEN(input => commits_array) AS f(commit, index)
 GROUP BY
-  event_id, event_type, is_public_event, event_created_at,
-  user_id, user_login, user_display_login, user_avatar_url,
-  repo_id, repo_owner, repo_name,
-  push_id, repository_id, git_reference, branch_name, 
-  head_commit_sha, before_commit_sha, total_commits, distinct_commits,
-  commits_array
+  event_id, event_type, push_is_public_event, push_event_created_at,
+  push_user_id, push_user_login, push_user_display_login, push_user_avatar_url,
+  push_repo_id, push_repo_owner, push_repo_name,
+  push_id, push_repository_id, push_git_reference, push_branch_name, 
+  push_head_commit_sha, push_before_commit_sha, push_total_commits, push_distinct_commits,
+  push_commits_array
