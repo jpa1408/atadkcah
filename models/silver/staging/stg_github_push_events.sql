@@ -36,7 +36,7 @@ WITH source_data AS (
     TRY_CAST(event_data["payload"]["distinct_size"]::INT AS INT) AS distinct_commits,
     TRY_CAST(event_data["payload"]["commits"] AS ARRAY) AS commits_array
 
-  FROM DATAHACK.bronze.raw_github_events
+  FROM DATAHACK.public.raw_github_events
   WHERE
     event_data["type"] = 'PushEvent'
     AND event_data["id"] IS NOT NULL

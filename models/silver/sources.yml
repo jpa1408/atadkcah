@@ -5,7 +5,7 @@ sources:
   - name: github_bronze
     description: "Raw data from GitHub Archives"
     database: "{{ env_var('DBT_DATABASE', 'DATAHACK') }}"
-    schema: "{{ env_var('DBT_SCHEMA', 'bronze') }}"
+    schema: "public"
     tables:
       - name: raw_github_events
         description: "Raw GitHub Archives events data from S3"
