@@ -7,7 +7,7 @@
 
 WITH push_events_stats AS (
     SELECT
-        DATE_TRUNC('day', event_created_at) AS metric_date,
+        DATE_TRUNC('day', push_event_created_at) AS metric_date,
         COUNT(*) AS total_events,
         COUNT(DISTINCT user_id) AS unique_users,
         COUNT(DISTINCT repo_id) AS unique_repositories,
