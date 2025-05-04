@@ -2,9 +2,7 @@
 {{
   config(
     materialized='table',
-    tags=['gold', 'core', 'activity'],
-    partition_by='activity_date',  -- Optimización para Snowflake
-    cluster_by='repo_name'
+    tags=['gold', 'core', 'activity']
   )
 }}
 
