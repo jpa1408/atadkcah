@@ -31,10 +31,10 @@ repo_activity AS (
 
 fork_counts AS (
   SELECT 
-    original_repo, 
+    fork_original_repo as original_repo, 
     COUNT(*) AS fork_count
   FROM {{ ref('stg_github_fork_events') }}
-  WHERE original_repo IS NOT NULL
+  WHERE fork_original_repo IS NOT NULL
   GROUP BY 1
 )
 
